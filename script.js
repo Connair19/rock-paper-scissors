@@ -83,7 +83,7 @@ function game() {
 function playAgain() {
     let answer = prompt("Do you want to play again?");
     answer = capitalize(answer);
-    console.log(answer);
+    //console.log(answer);
     while (answer !== "Yes" && answer !== "No") {
         answer = prompt("Please enter yes or no.")
     } 
