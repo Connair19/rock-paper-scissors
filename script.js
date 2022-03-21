@@ -86,6 +86,7 @@ function playAgain() {
     //console.log(answer);
     while (answer !== "Yes" && answer !== "No") {
         answer = prompt("Please enter yes or no.")
+        answer = capitalize(answer);
     } 
     if (answer === "Yes") { return true}
     else if(answer === "No") {return false}
