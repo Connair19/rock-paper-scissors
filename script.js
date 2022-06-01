@@ -13,15 +13,20 @@ function computerSelect() {
           :"Paper"
 }
 
-/* Ask for a move */
+const result = document.getElementsByClassName("result")[0];
+const winCount = document.createElement("div");
+const roundResult = document.createElement("div");
+let computerWins = 0;
+let playerWins = 0;
 
-function playerSelect() {
-   let move = prompt("Enter your move:");
-   move = capitalize(move);
-   /* Check if the move is valid and if it's not valid ask again with the name of the moves */
-   move = checkValid(move);
-   return move
-}
+
+
+const buttons = document.querySelectorAll(".movebtn");
+buttons.forEach(btn => {
+ btn.addEventListener("click", () => {
+     play(btn.id);
+ });
+});
 
 /* Compare the user's move with the computer move and return the result */
 function checkWinner(computerMove, playerMove) {
@@ -35,68 +40,98 @@ function checkWinner(computerMove, playerMove) {
          : "Tie";
      }
 
-function playRound() {
+function play(clickedButton) {
     let computerMove = computerSelect();
-    let playerMove = playerSelect();
+    let playerMove = clickedButton;
     let winner = checkWinner(computerMove, playerMove);
     if (winner === "Computer") {
-        console.log("You lose!" + computerMove + " beats " + playerMove + "!")
+        computerWins++;
+        roundResult.textContent = computerMove + " beats " + playerMove;
+        winCount.textContent = "Player " + playerWins + " - " + computerWins + " Computer";
+        console.log("winner is computer");
+        result.appendChild(roundResult);
+        result.appendChild(winCount);
     }
     else if (winner === "Player") {
-        console.log("You win!" + playerMove + " beats " + computerMove + "!")
+        playerWins++;
+        roundResult.textContent = playerMove + " beats " + computerMove;
+        winCount.textContent = "Player " + playerWins + " - " + computerWins + " Computer";
+        roundResult.textContent = playerMove + " beats " + computerMove;
+        console.log("winner is player");
+        result.appendChild(roundResult);
+        result.appendChild(winCount);
     }
-    else {
-        console.log("It's a tie!.")
+    else if (winner === "Tie") {
+        roundResult.textContent = "It's a tie!";
+        winCount.textContent = "Player " + playerWins + " - " + computerWins + " Computer";
+        roundResult.textContent = "It's a tie!";
+        console.log("winner is tie");
+        result.appendChild(roundResult);
+        result.appendChild(winCount);
     }
-    return winner
-}
 
+    if (computerWins === 5) {
+        disableButtons();
+        const finalResult = document.createElement("div");
+        const playAgainButton = document.createElement("button");
 
-function capitalize(string) {
-    string = string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-    return string
-}
-
-function checkValid(move) {
-    while(moves.includes(move) === false) {
-        move = prompt("Please enter a move which can be rock, paper or scissors.")
-        move = capitalize(move);
+        playAgainButton.textContent = "Play Again";
+        playAgainButton.addEventListener("click", playAgain);
+        if (playerWins === 4) {
+            finalResult.textContent = "Computer is the winner! You almost made it!";
         }
-    return move
+        else {
+            finalResult.textContent = "Computer is the winner! Better luck next time.";
+        }
+
+        styleFinalResult(finalResult);
+        stylePlayAgain(playAgainButton)
+        finalResult.appendChild(playAgainButton);
+        result.appendChild(finalResult);
+    }
+    else if (playerWins === 5) {
+        disableButtons();
+        const finalResult = document.createElement("div");
+        const playAgainButton = document.createElement("button");
+
+        playAgainButton.textContent = "Play Again";
+        playAgainButton.addEventListener("click", playAgain);
+        finalResult.textContent = "Congratulations you beat the computer!";
+
+        styleFinalResult(finalResult);
+        stylePlayAgain(playAgainButton)
+        finalResult.appendChild(playAgainButton);
+        result.appendChild(finalResult);
+    }
 }
 
-function game() {
-    let computerWins = 0;
-    let playerWins = 0;
-    for(let i = 0; i < 5; i++) {
-        winner = playRound()
-        if(winner === "Computer") {computerWins++}
-        else if(winner === "Player") {playerWins++}
-    }
-    console.log("Player: " + playerWins)
-    console.log("Computer: " + computerWins)
-    if (playerWins > computerWins) {console.log("Congratulations! You beat the computer!")}
-    else if (playerWins < computerWins) {console.log("That's unlucky, you lost to computer.")}
-    else {console.log("It's a tie. You almost made it!")}
+function disableButtons() {
+    document.getElementById("Rock").disabled = true;
+    document.getElementById("Paper").disabled = true;
+    document.getElementById("Scissors").disabled = true;
 }
 
 function playAgain() {
-    let answer = prompt("Do you want to play again?");
-    answer = capitalize(answer);
-    console.log(answer);
-    while (answer !== "Yes" && answer !== "No") {
-        answer = prompt("Please enter yes or no.")
-    } 
-    if (answer === "Yes") { return true}
-    else if(answer === "No") {return false}
-    
+    while (result.firstChild) {
+        result.removeChild(result.firstChild);
+    }
+    playerWins = 0;
+    computerWins = 0;
+    document.getElementById("Rock").disabled = false;
+    document.getElementById("Paper").disabled = false;
+    document.getElementById("Scissors").disabled = false;
+
 }
 
-
-game()
-while (playAgain()) {
-    game()
+function styleFinalResult(finalResult) {
+    finalResult.style.display = "flex";
+    finalResult.style.minHeight = "80px";
+    finalResult.style.flexDirection = "column";
+    finalResult.style.justifyContent = "space-around";
 }
 
-
-
+function stylePlayAgain(button) {
+    button.style.alignSelf = "center";
+    button.style.width = "90px";
+    button.style.height = "40px";
+}
