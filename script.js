@@ -16,6 +16,7 @@ function computerSelect() {
 const result = document.getElementsByClassName("result")[0];
 const winCount = document.createElement("div");
 const roundResult = document.createElement("div");
+const moveResult = document.createElement("div");
 let computerWins = 0;
 let playerWins = 0;
 
@@ -30,7 +31,6 @@ buttons.forEach(btn => {
 
 /* Compare the user's move with the computer move and return the result */
 function checkWinner(computerMove, playerMove) {
-    console.log("Computer chooses:" + computerMove)
     return computerMove === "Rock" && playerMove === "Paper" ? "Player"
          : computerMove === "Rock" && playerMove === "Scissors" ? "Computer"
          : computerMove === "Paper" && playerMove === "Rock" ? "Computer"
@@ -43,21 +43,21 @@ function checkWinner(computerMove, playerMove) {
 function play(clickedButton) {
     let computerMove = computerSelect();
     let playerMove = clickedButton;
+    moveResult.textContent = "Computer chooses " + computerMove + "!";
     let winner = checkWinner(computerMove, playerMove);
     if (winner === "Computer") {
         computerWins++;
-        roundResult.textContent = computerMove + " beats " + playerMove;
+        roundResult.textContent = "You lost! " + computerMove + " beats " + playerMove;
         winCount.textContent = "Player " + playerWins + " - " + computerWins + " Computer";
-        console.log("winner is computer");
+        result.appendChild(moveResult);
         result.appendChild(roundResult);
         result.appendChild(winCount);
     }
     else if (winner === "Player") {
         playerWins++;
-        roundResult.textContent = playerMove + " beats " + computerMove;
+        roundResult.textContent = "You win! " + playerMove + " beats " + computerMove;
         winCount.textContent = "Player " + playerWins + " - " + computerWins + " Computer";
-        roundResult.textContent = playerMove + " beats " + computerMove;
-        console.log("winner is player");
+        result.appendChild(moveResult);
         result.appendChild(roundResult);
         result.appendChild(winCount);
     }
@@ -65,7 +65,7 @@ function play(clickedButton) {
         roundResult.textContent = "It's a tie!";
         winCount.textContent = "Player " + playerWins + " - " + computerWins + " Computer";
         roundResult.textContent = "It's a tie!";
-        console.log("winner is tie");
+        result.appendChild(moveResult);
         result.appendChild(roundResult);
         result.appendChild(winCount);
     }
@@ -132,6 +132,8 @@ function styleFinalResult(finalResult) {
 
 function stylePlayAgain(button) {
     button.style.alignSelf = "center";
-    button.style.width = "90px";
-    button.style.height = "40px";
+    button.style.width = "100px";
+    button.style.height = "60px";
+    button.style.fontSize = "16px";
+    button.style.marginTop = "14px";
 }
